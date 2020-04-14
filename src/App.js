@@ -5,7 +5,7 @@ import BMGrid from './BMGrid'
 import * as jsPDF from 'jspdf'
 import * as html2canvas from 'html2canvas';
 import Cookies from 'js-cookie';
-
+import Toast from './Toast'
 export default class App extends React.Component {
   
   state = {edit:false, 
@@ -13,6 +13,8 @@ export default class App extends React.Component {
           showVersion: false, 
           header:"Business Model Name",
           version: "1.0",
+          showToast: false,
+          message: "",
           layout:  
         [{i: 'Key Partners',        x: 0, y: 0, w: 2, h: 8, text: `* Equinix (for data Center facilities)\n* Content Providers`},
         {i: 'Key Activities',       x: 2, y: 0, w: 2, h: 4, text: `* Plateform Dvpt`},
@@ -31,6 +33,21 @@ export default class App extends React.Component {
     this.handleHeaderChange = this.handleHeaderChange.bind(this);
     this.handleVersionChange = this.handleVersionChange.bind(this);
     this.saveToCookies = this.saveToCookies.bind(this);
+    this.printDocument = this.printDocument.bind(this);
+  }
+  componentDidMount(){
+    try{
+    let bmCookie = Cookies.get('business_model')
+    if(bmCookie){
+      bmCookie = JSON.parse(bmCookie)
+      if(bmCookie.length> 0){
+
+      }
+      this.setState({layout:bmCookie})
+    }
+    }catch(error){
+      console.error("could not parse cookie")
+    }
   }
 
   handleTextChange(value, index){
@@ -40,15 +57,17 @@ export default class App extends React.Component {
   }
 
   printDocument() {
-
+    this.setState({edit:false})
     let items = document.getElementsByClassName('react-grid-item')
     for(var i=0;i<items.length;i++){
-      var transform = items[i].style.transform.substr(10)
-      items[i].style.left = transform.substring(0, transform.indexOf(','))
-      console.log(transform.substring(0, transform.indexOf(',')))
-      items[i].style.top = transform.substring(transform.indexOf(',')+2, transform.length-1)
-      console.log(transform.substring(transform.indexOf(',')+2, transform.length-1))
-      items[i].style.transform = ""
+      if(items[i].style.transform.length > 10){
+        var transform = items[i].style.transform.substr(10)
+        items[i].style.left = transform.substring(0, transform.indexOf(','))
+        console.log(transform.substring(0, transform.indexOf(',')))
+        items[i].style.top = transform.substring(transform.indexOf(',')+2, transform.length-1)
+        console.log(transform.substring(transform.indexOf(',')+2, transform.length-1))
+        items[i].style.transform = ""  
+      }
     }
 
     html2canvas(document.getElementById('divToPrint'), {
@@ -68,6 +87,7 @@ export default class App extends React.Component {
   saveToCookies(){
    
     Cookies.set('business_model', this.state.layout)
+    this.showToast("model saved")
   }
   toggleChange = () => {
     this.setState({
@@ -95,6 +115,16 @@ export default class App extends React.Component {
     this.setState({
       version: event.target.value
     });
+  }
+  showToast (message) {    
+    this.setState({
+      showToast: true,
+      message: message
+    }, () => {
+      setTimeout(() =>
+        this.setState({ showToast: false })
+    ,  3000)
+    })
   }
 
   render() {
@@ -138,6 +168,11 @@ export default class App extends React.Component {
             :""}
           <BMGrid style={{position:'relative'}} textChange={(value, index)=>this.handleTextChange(value, index)} layout={this.state.layout} edit={this.state.edit} ></BMGrid>
         </div>
+      
+        <Toast
+          message={this.state.message}
+          visible={this.state.showToast}
+        />
       </div>
     );
   }
