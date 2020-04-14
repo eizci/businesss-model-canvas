@@ -24,7 +24,7 @@ export default class Toast extends React.Component {
       return (
         <div className={classes}>
           <figure>
-            <img src={successSvg} />
+            <img src={successSvg} alt="success" />
           </figure>
           <p>{ this.props.message }</p>
         </div>
