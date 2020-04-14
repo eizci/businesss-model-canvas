@@ -1,0 +1,249 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.bm-block{
+  background-color: #29e;
+  color: white;
+  font-size: 20px;
+  font-family: sans-serif;
+  border-radius: 8px;
+  padding: 20px;
+  touch-action: none;
+
+  width: 120px;
+
+  /* This makes things *much* easier */
+  box-sizing: border-box;
+}
+
+.main-app{
+  width:100%;
+  height:100%;
+}
+.grid-parent{
+width:100%;
+height: max-content;
+}
+h4{
+  display: inline-block;
+  margin:20px;
+}
+
+.bmi-block{
+  width: 100%;
+  height:100%;
+}
+
+.bm-name{
+  margin: 0 0 10px 0;
+  padding-bottom: 0;
+  border-bottom: 1px solid #fff;
+}
+
+textarea{
+  font-size: 16px;
+  width:100%;
+  border-radius: 5px;
+}
+
+.react-grid-item.bm-block.react-draggable.cssTransforms.react-resizable {
+  padding-left: 10px;
+}
+
+button {
+	min-width: 150px;
+	max-width: 250px;
+	padding: 1em 2em;
+	border: none;
+	background: none;
+	color: inherit;
+  position: relative;
+  font-size:16px;
+	-moz-osx-font-smoothing: grayscale;
+	border-radius: 5px;
+  border: 1px solid;
+  float: right;
+  margin: 20px;
+}
+
+button:focus {
+	outline: none;
+}
+
+button::after {
+	content: attr(data-text);
+	position: absolute;
+	width: 100%;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	color: #3f51b5;
+	-webkit-transform: translate3d(0, 25%, 0);
+  transform: translate3d(0, 25%, 0);
+  padding: 1em 2em;
+	-webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+	transition: transform 0.3s, opacity 0.3s;
+	-webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+	transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+button:hover {
+	border-color: #3f51b5;
+	background-color: rgba(63, 81, 181, 0.1);
+}
+
+button:hover::after {
+	opacity: 1;
+	-webkit-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+}
+
+.topbar span {
+  width: 200px;
+  display: inline-block;
+  text-align: right;
+  padding-top: 28px;
+}
+
+.toggle-label {
+  display: block;
+  width: 54px;
+  height: 32px;
+  margin: 0px auto;
+  border-radius: 100px;
+  transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+  background-color: #E6E9EC;
+}
+
+.toggly {
+  display: none;
+}
+
+.grid-parent{
+  background-color: '#f5f5f5';
+  margin-left: 'auto';
+  margin-right: 'auto';
+}
+
+/* The toggle */
+
+i {
+  height: 28px;
+  width: 28px;
+  background: #ffffff;
+  display: inline-block;
+  border-radius: 100px;
+  margin-top: 2px;
+  margin-left: 2px;
+  transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+  pointer-events: none;
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+}
+
+.toggle-label:hover>i {
+  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.20);
+  transform: scale(1.01);
+}
+
+.toggly:checked+label>i {
+  margin-left: 24px;
+}
+
+.toggle-label:active {
+  background-color: #A6B9CB;
+}
+
+.toggle-label:active>i {
+  width: 34px;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.20);
+}
+
+.toggly:checked+label:active>i {
+  margin-left: 18px;
+}
+
+.toggly:checked+label {
+  background-color: #008FFF;
+}
+.topbar {
+  height: 90px;
+}
+.toggle-name {
+  vertical-align: top;
+  height: 90px;
+  padding-top: 20px;
+  width: 100px;
+  display: inline-block;
+}
+.headers {
+  display: inline-block;
+  width: 100%;
+}
+.header-input, .version-input{
+  background: rgba(0, 0, 0, 0);
+  border: none;
+  height:30px;
+  font-size:20px;
+  margin: 2px;
+}
+.header-input:hover{
+  border:2px solid lightblue;
+  margin: 0;
+  width:100%
+}
+
+.version-input:hover{
+  border:2px solid lightblue;
+  margin: 0;
+  width:80%
+}
+
+.header-container {
+  margin: 5px;
+  margin-left: 24px;
+  display: inline-block;
+  width:60%;
+}
+
+.version-container {
+  float: right;
+  width:25%;
+}
