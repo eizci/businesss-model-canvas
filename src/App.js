@@ -25,10 +25,11 @@ export default class App extends React.Component {
     this.handleHeaderChange = this.handleHeaderChange.bind(this);
     this.handleVersionChange = this.handleVersionChange.bind(this);
     this.saveToCookies = this.saveToCookies.bind(this);
-    this.printDocument = this.printDocument.bind(this);
+    this.saveAsImage = this.saveAsImage.bind(this);
     this.resetLayout = this.resetLayout.bind(this);
     this.handleLayoutChange = this.handleLayoutChange.bind(this);
   }
+
   componentDidMount(){
 
     try{
@@ -36,7 +37,6 @@ export default class App extends React.Component {
       if(bmCookie){
         bmCookie = JSON.parse(bmCookie)
         if(bmCookie.layout){
-          console.log("setting layout")
           this.updateLayout(bmCookie.layout)
           this.setState({texts: bmCookie.texts})
         }
@@ -86,32 +86,44 @@ export default class App extends React.Component {
 
   handleLayoutChange(newLayout){
     this.setState({layout:newLayout})
+    this.fit2Content()
   }
-
-  printDocument() {
+  saveAsImage() {
     this.setState({edit:false}, function(){
-      let items = document.getElementsByClassName('react-grid-item')
-      for(var i=0;i<items.length;i++){
-        if(items[i].style.transform.length > 10){
-          var transform = items[i].style.transform.substr(10)
-          items[i].style.left = transform.substring(0, transform.indexOf(','))
-          console.log(transform.substring(0, transform.indexOf(',')))
-          items[i].style.top = transform.substring(transform.indexOf(',')+2, transform.length-1)
-          console.log(transform.substring(transform.indexOf(',')+2, transform.length-1))
-          items[i].style.transform = ""  
-        }
-      }
-  
+      let elementWidth = document.getElementById('divToPrint').offsetWidth
+      let elementHeight = document.getElementById('divToPrint').offsetHeight
       html2canvas(document.getElementById('divToPrint'), {
-        width: window.innerWidth,
-        height: window.innerHeight
+        width: elementWidth,
+        height: elementHeight
+      }).then((canvas) => {
+
+          const link = document.createElement('a');
+          link.download =  'business_model.png';
+          //console.log(canvas)
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+
+        })
+    })
+  }
+    printDocument() {
+    this.setState({edit:false}, function(){
+      let elementWidth = document.getElementById('divToPrint').offsetWidth
+      let elementHeight = document.getElementById('divToPrint').offsetHeight
+      html2canvas(document.getElementById('divToPrint'), {
+        width: elementWidth,
+        height: elementHeight
       }).then((canvas) => {
           const imgData = canvas.toDataURL('image/png');
-          const pdf = new jsPDF("l", "mm", "a4");
+          let ratio = (elementHeight>elementWidth ? "p" : "l")
+          const pdf = new jsPDF(ratio, "mm", "a4");
           var width = pdf.internal.pageSize.getWidth();
           var height = pdf.internal.pageSize.getHeight();
-  
-          pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+          let fitToWidth = (elementWidth / elementHeight) > (width / height)
+          if(fitToWidth)
+            pdf.addImage(imgData, 'JPEG', 0, 0, width, elementHeight*width/elementWidth);
+          else 
+            pdf.addImage(imgData, 'JPEG', 0, 0, elementWidth*height/elementHeight, height);
           pdf.save("business_model.pdf");
         })
     })
@@ -165,7 +177,24 @@ export default class App extends React.Component {
     ,  3000)
     })
   }
-
+  fit2Content(){
+    let items = document.getElementsByClassName('react-grid-item')
+    let parent = document.getElementById('divToPrint')
+      let minX =parent.offsetWidth
+      let minY = parent.offsetHeight
+      let maxX = -1
+      let maxY = -1
+      for(var i=0;i<items.length;i++){
+          let currMaxY = items[i].offsetTop + items[i].offsetHeight
+          let currMaxX = items[i].offsetLeft + items[i].offsetWidth
+          maxY = currMaxY > maxY ? currMaxY : maxY
+          maxX = currMaxX > maxX ? currMaxX : maxX
+          minY = items[i].offsetTop < minY ? items[i].offsetTop : minY
+          minX = items[i].offsetLeft < minX ? items[i].offsetLeft : minX
+      }
+      parent.style.width = `${maxX-minX+20}px`
+      parent.style.height = `${maxY-minY+20}px`
+  }
   render() {
 
     return (
@@ -173,6 +202,7 @@ export default class App extends React.Component {
         <div className="topbar">
             <h4>Business Model Canvas</h4>
             <button className="generate" onClick={this.resetLayout}>Reset</button>
+            <button className="generate" onClick={this.saveAsImage}>Save as Image</button>
             <button className="generate" onClick={this.printDocument}>Save as PDF</button>
             <button className="cookify" onClick={this.saveToCookies}>Save to Cookies</button>
             <span>Edit</span>

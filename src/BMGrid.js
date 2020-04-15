@@ -21,9 +21,7 @@ class BMGrid extends React.Component {
     }
 
     updateDimensions(){
-        let layout = this.state.layout
-        this.setState({width:window.innerWidth, height:window.innerHeight*0.06, layout:this.props.layout})
-        console.log('resized')
+        this.setState({width:window.innerWidth, height:window.innerHeight*0.06})
     }
 
     handleTextChange(value, index){
@@ -31,7 +29,6 @@ class BMGrid extends React.Component {
     }
 
     handleChartResize = (layout) => {
-        console.log('this is the layout', layout);
         this.props.changeLayout(layout)
     }
     
@@ -49,6 +46,7 @@ class BMGrid extends React.Component {
             layout={this.props.layout} cols={10}  
             width={this.state.width}
             onLayoutChange={this.handleChartResize}
+            useCSSTransforms={false}
             rowHeight={this.state.height}>
             {this.getBlocks()}
         </GridLayout>
