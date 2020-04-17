@@ -25,6 +25,7 @@ export default class App extends React.Component {
     this.handleHeaderChange = this.handleHeaderChange.bind(this);
     this.handleVersionChange = this.handleVersionChange.bind(this);
     this.saveToCookies = this.saveToCookies.bind(this);
+    this.printDocument = this.printDocument.bind(this);
     this.saveAsImage = this.saveAsImage.bind(this);
     this.resetLayout = this.resetLayout.bind(this);
     this.handleLayoutChange = this.handleLayoutChange.bind(this);
